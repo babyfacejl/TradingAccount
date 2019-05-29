@@ -1,11 +1,9 @@
 package com.compliance.trading.models;
 
-import com.compliance.trading.util.Currency;
 import com.compliance.trading.util.DebitCredit;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,7 +12,7 @@ public class AccountTransaction {
     @Id
     private UUID id = UUID.randomUUID();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private Account account;
 

@@ -2,10 +2,10 @@ package com.compliance.trading.models;
 
 import com.compliance.trading.util.AccountType;
 import com.compliance.trading.util.Currency;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +13,7 @@ import java.util.UUID;
 @Entity
 public class Account {
     @Id
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id = UUID.randomUUID();
     @Column(nullable=false)
     private String accountNumber;
