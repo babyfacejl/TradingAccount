@@ -2,7 +2,7 @@
 
 Trading account backend service to support a web application that allows user to view transactions on any of the account they hold
 
-### Prerequisites
+## Prerequisites
 
 * Java 11
 * Spring boot
@@ -27,7 +27,7 @@ $ mvn spring-boot:run
 * /api/{userId}/accounts - returns a list of accounts for the userId
 * /api/{accountId}/txns - returns a list of account transactions for the selected account
 
-### Installing
+## Installing
 
 1. Run maven command to generate jar file
 ```
