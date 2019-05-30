@@ -1,21 +1,17 @@
 # Project Title
 
-Trading account Backend service to support a web application that allows user to view transactions on any of the account they hold
+Trading account backend service to support a web application that allows user to view transactions on any of the account they hold
 
 ## Getting Started
 
 Run following command to start the back end service
-mvn spring-boot:run
+$ mvn spring-boot:run
 
 ### Prerequisites
 
 * Java 11
 * Spring boot
 * Maven
-
-```
-Give examples
-```
 
 ### Installing
 
@@ -37,7 +33,7 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+$ mvn test
 
 ### Break down into end to end tests
 
@@ -55,7 +51,9 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Deployment
+## Domain model object
+* Account
+* AccountTransaction
 
 Add additional notes about how to deploy this on a live system
 
@@ -65,26 +63,8 @@ Add additional notes about how to deploy this on a live system
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
 ## Authors
+* **John Luo** - *Initial work*
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
