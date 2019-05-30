@@ -2,9 +2,9 @@ package com.compliance.trading.repository;
 
 import com.compliance.trading.models.Account;
 import com.compliance.trading.models.AccountTransaction;
+import com.compliance.trading.util.AccountBuilder;
+import com.compliance.trading.util.AccountTransactionBuilder;
 import com.compliance.trading.util.AccountType;
-import com.compliance.trading.util.Currency;
-import com.compliance.trading.util.DebitCredit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import static com.compliance.trading.util.Currency.AUD;
+import static com.compliance.trading.util.Currency.SGD;
+import static com.compliance.trading.util.DebitCredit.CREDIT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -32,17 +35,51 @@ public class AccountTransactionRepositoryIntegrationTest {
 
     @Test
     public void shouldFindByAccountId() {
-        final Account account = new Account(1L, "11111", "test", AccountType.CURRENT,
-                new Date(), Currency.SGD, new BigDecimal("42342.99"), 1L);
-        final Account account2 = new Account(2L, "11111", "test", AccountType.CURRENT,
-                new Date(), Currency.SGD, new BigDecimal("42342.99"), 1L);
+        final Account account = AccountBuilder.anAccount()
+                .withAccountName("test1")
+                .withAccountNumber("11111")
+                .withAccountType(AccountType.CURRENT)
+                .withBalanceDate(new Date())
+                .withCurrency(SGD)
+                .withOpeningAvailableBalance(new BigDecimal("42342.99"))
+                .withUserId(1L)
+                .withId(1L)
+                .build();
+        final Account account2 = AccountBuilder.anAccount()
+                .withAccountName("abc")
+                .withAccountNumber("22222")
+                .withAccountType(AccountType.SAVINGS)
+                .withBalanceDate(new Date())
+                .withCurrency(AUD)
+                .withOpeningAvailableBalance(new BigDecimal("3432.99"))
+                .withUserId(1L)
+                .withId(2L)
+                .build();
 
-        final AccountTransaction accountTransaction1 = new AccountTransaction(1L, account, new Date(),
-                new BigDecimal("234234.93"), DebitCredit.CREDIT, "");
-        final AccountTransaction accountTransaction2 = new AccountTransaction(2L ,account, new Date(),
-                new BigDecimal("566.93"), DebitCredit.CREDIT, "narrative");
-        final AccountTransaction accountTransaction3 = new AccountTransaction(3L ,account2, new Date(),
-                new BigDecimal("53366.93"), DebitCredit.CREDIT, "narrative");
+        final AccountTransaction accountTransaction1 = AccountTransactionBuilder.anAccountTransaction()
+                .withId(1L)
+                .withAccount(account)
+                .withValueDate(new Date())
+                .withAmount(new BigDecimal("234234.93"))
+                .withDebitCredit(CREDIT)
+                .withTransactionNarrative("")
+                .build();
+        final AccountTransaction accountTransaction2 = AccountTransactionBuilder.anAccountTransaction()
+                .withId(2L)
+                .withAccount(account)
+                .withValueDate(new Date())
+                .withAmount(new BigDecimal("234.93"))
+                .withDebitCredit(CREDIT)
+                .withTransactionNarrative("narrative1")
+                .build();
+        final AccountTransaction accountTransaction3 = AccountTransactionBuilder.anAccountTransaction()
+                .withId(3L)
+                .withAccount(account2)
+                .withValueDate(new Date())
+                .withAmount(new BigDecimal("234331.3"))
+                .withDebitCredit(CREDIT)
+                .withTransactionNarrative("narrative2")
+                .build();
 
         accountRepository.save(account);
         accountRepository.save(account2);
@@ -62,5 +99,12 @@ public class AccountTransactionRepositoryIntegrationTest {
         final AccountTransaction dbAccountTxn2 = accountTxns.get(1);
         assertThat(dbAccountTxn2.getAccount().getId(), is(account.getId()));
         assertThat(dbAccountTxn2.getId(), is(accountTransaction2.getId()));
+    }
+
+    @Test
+    public void shouldReturnEmptyListIfAccountHasNoTransactions() {
+        List<AccountTransaction> accountTxns = accountTransactionRepository.findByAccountId(34545L);
+        assertThat(accountTxns.isEmpty(), is(true));
+
     }
 }

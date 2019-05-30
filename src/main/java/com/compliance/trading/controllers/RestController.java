@@ -24,12 +24,12 @@ public class RestController {
         this.accountService = accountService;
     }
 
-    @GetMapping(value = "/{userId}/accounts")
+    @GetMapping(value = "/users/{userId}/accounts")
     public List<Account> getAccounts(@PathVariable Long userId) {
-        return accountService.getAccountByUserId(Long.valueOf(userId));
+        return accountService.getAccountByUserId(userId);
     }
 
-    @GetMapping(value = "/{accountId}/txns")
+    @GetMapping(value = "/accounts/{accountId}/txns")
     public List<AccountTransaction> getAccountTransaction(@PathVariable Long accountId) {
         return accountService.getAccountTransactionsByAccountId(accountId);
     }

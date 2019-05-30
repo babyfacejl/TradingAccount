@@ -3,9 +3,9 @@ package com.compliance.trading.controllers;
 import com.compliance.trading.models.Account;
 import com.compliance.trading.models.AccountTransaction;
 import com.compliance.trading.service.AccountService;
+import com.compliance.trading.util.AccountBuilder;
+import com.compliance.trading.util.AccountTransactionBuilder;
 import com.compliance.trading.util.AccountType;
-import com.compliance.trading.util.Currency;
-import com.compliance.trading.util.DebitCredit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 
+import static com.compliance.trading.util.Currency.SGD;
+import static com.compliance.trading.util.DebitCredit.CREDIT;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -46,12 +48,27 @@ public class RestControllerTest {
     public void shouldGetTransactionsByAccountId() throws Exception {
         final Long accountId = 1L;
         final Long userId = 1L;
-        final Account account = new Account(accountId,"11111", "test", AccountType.CURRENT,
-                new Date(), Currency.SGD, new BigDecimal("42342.99"), userId);
-        final AccountTransaction accountTransaction = new AccountTransaction(1L, account, new Date(),
-                new BigDecimal("234234.93"), DebitCredit.CREDIT, "");
+        final Account account = AccountBuilder.anAccount()
+                .withAccountName("test1")
+                .withAccountNumber("11111")
+                .withAccountType(AccountType.CURRENT)
+                .withBalanceDate(new Date())
+                .withCurrency(SGD)
+                .withOpeningAvailableBalance(new BigDecimal("42342.99"))
+                .withUserId(userId)
+                .withId(accountId)
+                .build();
+
+        final AccountTransaction accountTransaction = AccountTransactionBuilder.anAccountTransaction()
+                .withId(1L)
+                .withAccount(account)
+                .withValueDate(new Date())
+                .withAmount(new BigDecimal("234234.93"))
+                .withDebitCredit(CREDIT)
+                .withTransactionNarrative("")
+                .build();
         when(mockAccountService.getAccountTransactionsByAccountId(accountId)).thenReturn(Arrays.asList(accountTransaction));
-        mockMvc.perform(get("/api/"+account.getId()+"/txns"))
+        mockMvc.perform(get("/api/accounts/" + account.getId() + "/txns"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].account.id", is(Integer.valueOf(accountTransaction.getAccount().getId().intValue()))))
@@ -60,23 +77,59 @@ public class RestControllerTest {
         verify(mockAccountService, times(1)).getAccountTransactionsByAccountId(accountId);
     }
 
+    @Test
+    public void shouldReturnEmptyListWhenAccountHasNoTransactions() throws Exception {
+        final Long accountId = 2345L;
+        when(mockAccountService.getAccountTransactionsByAccountId(accountId)).thenReturn(Arrays.asList());
+
+        mockMvc.perform(get("/api/accounts/" + accountId + "/txns"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json("[]"))
+                .andExpect(status().isOk());
+
+        verify(mockAccountService, times(1)).getAccountTransactionsByAccountId(accountId);
+    }
+
 
     @Test
     public void shouldGetAllAccountsForUserId() throws Exception {
-        final Long accountId = 1L;
-        final Long userId = 1L;
-        final Account account1 = new Account(accountId,"11111", "test", AccountType.CURRENT,
-                new Date(), Currency.SGD, new BigDecimal("42342.99"), userId);
-        when(mockAccountService.getAccountByUserId(accountId)).thenReturn(Arrays.asList(account1));
-        mockMvc.perform(get("/api/1/accounts"))
+        final Long accountId = 100L;
+        final Long userId = 2345L;
+        final Account account = AccountBuilder.anAccount()
+                .withAccountName("test1")
+                .withAccountNumber("11111")
+                .withAccountType(AccountType.CURRENT)
+                .withBalanceDate(new Date())
+                .withCurrency(SGD)
+                .withOpeningAvailableBalance(new BigDecimal("42342.99"))
+                .withUserId(userId)
+                .withId(accountId)
+                .build();
+
+        when(mockAccountService.getAccountByUserId(userId)).thenReturn(Arrays.asList(account));
+        mockMvc.perform(get("/api/users/" + userId + "/accounts"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].accountName", containsString(account1.getAccountName())))
-                .andExpect(jsonPath("$.[0].accountType", containsString(account1.getAccountType().name())))
-                .andExpect(jsonPath("$.[0].currency", containsString(account1.getCurrency().name())))
-                .andExpect(jsonPath("$.[0].userId", is(Integer.valueOf(account1.getUserId().intValue()))))
-                .andExpect(jsonPath("$.[0].id", is(Integer.valueOf(account1.getId().intValue()))));
+                .andExpect(jsonPath("$.[0].accountName", containsString(account.getAccountName())))
+                .andExpect(jsonPath("$.[0].accountType", containsString(account.getAccountType().name())))
+                .andExpect(jsonPath("$.[0].currency", containsString(account.getCurrency().name())))
+                .andExpect(jsonPath("$.[0].userId", is(Integer.valueOf(account.getUserId().intValue()))))
+                .andExpect(jsonPath("$.[0].id", is(Integer.valueOf(account.getId().intValue()))));
 
         verify(mockAccountService, times(1)).getAccountByUserId(userId);
     }
+
+    @Test
+    public void shouldReturnEmptyListWhenUserIdHasNoAccounts() throws Exception {
+        final Long userId = 2345L;
+        when(mockAccountService.getAccountByUserId(userId)).thenReturn(Arrays.asList());
+
+        mockMvc.perform(get("/api/users/" + userId + "/accounts"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json("[]"))
+                .andExpect(status().isOk());
+
+        verify(mockAccountService, times(1)).getAccountByUserId(userId);
+    }
+
 }
