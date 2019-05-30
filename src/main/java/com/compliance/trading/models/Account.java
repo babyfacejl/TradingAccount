@@ -2,19 +2,18 @@ package com.compliance.trading.models;
 
 import com.compliance.trading.util.AccountType;
 import com.compliance.trading.util.Currency;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
 public class Account {
     @Id
-    @Type(type="org.hibernate.type.UUIDCharType")
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(nullable = false)
+    private Long userId;
     @Column(nullable=false)
     private String accountNumber;
     @Column(nullable=false)
@@ -28,19 +27,18 @@ public class Account {
     @Enumerated(EnumType.STRING)
     @Column(nullable=false)
     private Currency currency;
-    private BigDecimal openingBalance;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
-    private List<AccountTransaction> transactionList;
+    private BigDecimal openingAvailableBalance;
 
     protected Account() {}
-    public Account(String accountNumber, String accountName, AccountType accountType, Date balanceDate, Currency currency, BigDecimal openingBalance) {
+    public Account(Long id, String accountNumber, String accountName, AccountType accountType, Date balanceDate, Currency currency, BigDecimal openingAvailableBalance, Long userId) {
         this.accountNumber = accountNumber;
         this.accountName = accountName;
         this.accountType = accountType;
         this.balanceDate = balanceDate;
         this.currency = currency;
-        this.openingBalance = openingBalance;
+        this.openingAvailableBalance = openingAvailableBalance;
+        this.userId = userId;
+        this.id = id;
     }
 
     public String getAccountNumber() {
@@ -83,15 +81,23 @@ public class Account {
         this.currency = currency;
     }
 
-    public BigDecimal getOpeningBalance() {
-        return openingBalance;
+    public BigDecimal getOpeningAvailableBalance() {
+        return openingAvailableBalance;
     }
 
-    public void setOpeningBalance(BigDecimal openingBalance) {
-        this.openingBalance = openingBalance;
+    public void setOpeningAvailableBalance(BigDecimal openingAvailableBalance) {
+        this.openingAvailableBalance = openingAvailableBalance;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

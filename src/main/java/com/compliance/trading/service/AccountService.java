@@ -5,12 +5,9 @@ import com.compliance.trading.models.AccountTransaction;
 import com.compliance.trading.repository.AccountRepository;
 import com.compliance.trading.repository.AccountTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -24,21 +21,20 @@ public class AccountService {
     }
 
     /**
-     * Sort by Account name with sorting order
-     * @param sort
+     * Return list of accounts for user id
+     * @param userId
      * @return
      */
-    public List<Account> getAccounts(Sort sort) {
-        return this.accountRepository.findAll(sort);
+    public List<Account> getAccountByUserId(Long userId) {
+        return this.accountRepository.findByUserId(userId);
     }
 
     /**
-     * Return list of account transaction for account id Sort by value date in ascending order by default with max results
+     * Return list of account transactions for account id
      * @param accountId
-     * @param pageable
      * @return
      */
-    public List<AccountTransaction> getAccountTransactionsByAccountId(UUID accountId, Pageable pageable) {
-        return this.accountTransactionRepository.findByAccountId(accountId, pageable);
+    public List<AccountTransaction> getAccountTransactionsByAccountId(Long accountId) {
+        return this.accountTransactionRepository.findByAccountId(accountId);
     }
 }

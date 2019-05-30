@@ -5,12 +5,12 @@ import com.compliance.trading.util.DebitCredit;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 public class AccountTransaction {
     @Id
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
@@ -30,12 +30,13 @@ public class AccountTransaction {
 
     protected AccountTransaction() {}
 
-    public AccountTransaction(Account account, Date valueDate, BigDecimal amount, DebitCredit debitCredit, String transactionNarrative) {
+    public AccountTransaction(Long id, Account account, Date valueDate, BigDecimal amount, DebitCredit debitCredit, String transactionNarrative) {
         this.valueDate = valueDate;
         this.amount = amount;
         this.debitCredit = debitCredit;
         this.transactionNarrative = transactionNarrative;
         this.account = account;
+        this.id = id;
     }
 
     public Account getAccount() {
@@ -78,7 +79,7 @@ public class AccountTransaction {
         this.transactionNarrative = transactionNarrative;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 }

@@ -7,12 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
-import java.util.UUID;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountServiceTest {
@@ -30,16 +27,13 @@ public class AccountServiceTest {
 
     @Test
     public void getAccounts() {
-        Sort sort = mock(Sort.class);
-        accountService.getAccounts(sort);
-        verify(accountRepository, times(1)).findAll(sort);
+        accountService.getAccountByUserId(1L);
+        verify(accountRepository, times(1)).findByUserId(1L);
     }
 
     @Test
     public void getAccountTransactionsByAccountId() {
-        UUID accountId = UUID.randomUUID();
-        Pageable pageable = mock(Pageable.class);
-        accountService.getAccountTransactionsByAccountId(accountId, pageable);
-        verify(accountTransactionRepository, times(1)).findByAccountId(accountId, pageable);
+        accountService.getAccountTransactionsByAccountId(1L);
+        verify(accountTransactionRepository, times(1)).findByAccountId(1L);
     }
 }
