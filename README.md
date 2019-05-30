@@ -16,6 +16,8 @@ Following assumptions are made because the instructions in the exercise is a bit
  * Only need to get transactions for the selected account and one account can't be shared by multiple users. Otherwise I would have implemented security check to make sure the account id belongs to the current user.
  
 ## Domain model object
+Assumption: I used h2 auto schema generation so that we can quickly demo to the business and get feedback. 
+When we get more clear requirements I will create tables schema manually. 
 * Account
 ```$xslt
 Assumption
