@@ -4,9 +4,17 @@ Trading account backend service to support a web application that allows user to
 
 ## Getting Started
 
-Run following command to start the back end service
+1. Git clone the repo
+```
+$ git clone
+```
 
+## Start backend service
+
+Run following command to start the back end service
+```
 $ mvn spring-boot:run
+```
 
 ### Prerequisites
 
@@ -16,18 +24,15 @@ $ mvn spring-boot:run
 * H2 inmemory database
 
 ## API Endpoints
-* /api/{userId}/accounts
- - will return a list of accounts for the userId
- 
-* /api/{accountId}/txns
- - returns a list of account transactions for the selected account
+* /api/{userId}/accounts - returns a list of accounts for the userId
+* /api/{accountId}/txns - returns a list of account transactions for the selected account
 
 ### Installing
 
-Run command to generate jar file
-
+1. Run maven command to generate jar file
+```
 $ mvn clean install 
-
+```
 ## Running the tests
 
 $ mvn test
