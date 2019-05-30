@@ -10,9 +10,11 @@ Account and transaction enquiry backend service to support a web application tha
 * H2 inmemory database
 
 ## Assumption
+Following assumptions are made because the instructions in the exercise is a bit vague.
  * An user will not have hundreds or thousands of accounts and no sorting is required. Otherwise would apply query limits or pagination for performance concerns.
  * An account will not have hundreds or thousands of transactions and no sorting is required. Otherwise would apply query limits or pagination for performance concerns.
-
+ * Only need to get transactions for the selected account and one account can't be shared by multiple users. Otherwise I would have implemented security check to make sure the account id belongs to the current user.
+ 
 ## Domain model object
 * Account
 ```$xslt
@@ -33,7 +35,7 @@ Assumption
 ```
  returns a list of accounts for the userId
  Can use postman to do GET
- e.og http://localhost:8080/api/users/1/accounts
+ e.g http://localhost:8080/api/users/1/accounts
 ```
 * /api/accounts/{accountId}/txns 
 ```
